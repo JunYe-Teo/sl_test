@@ -1,0 +1,184 @@
+name: test-sl-app
+region: sgp  # Change to your preferred region (e.g. nyc, ams)
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+databases:
+  - name: db-mysql-sgp1-75743
+    engine: MYSQL
+    version: "8"
+    cluster_name: db-mysql-sgp1-75743
+    db_name: sl_test
+    production: true
+
+domains:
+  - domain: jytest.space
+    type: PRIMARY
+    zone: jytest.space
+
+features:
+  - buildpack-stack=ubuntu-22
+
+ingress:
+  rules:
+    - component:
+        name: test-sl
+      match:
+        authority: {}
+        path:
+          prefix: /
+
+services:
+  - name: test-sl
+    environment_slug: php
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    source_dir: /
+    build_command: npm run build
+    run_command: heroku-php-apache2 public/
+    http_port: 8080
+    github:
+      repo: JunYe-Teo/sl_test  # Change to your GitHub repo
+      branch: main
+      deploy_on_push: true
+    envs:
+      # --- Laravel Basic Config ---
+      - key: APP_NAME
+        scope: RUN_AND_BUILD_TIME
+        value: SL-TEST
+      - key: APP_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: production
+      - key: APP_DEBUG
+        scope: RUN_AND_BUILD_TIME
+        value: "false"
+      - key: APP_URL
+        scope: RUN_AND_BUILD_TIME
+        value: https://jytest.space
+
+      # --- Laravel Encryption ---
+      - key: APP_KEY
+        scope: RUN_AND_BUILD_TIME
+        generate_value: true
+
+      # --- Laravel Locale Settings ---
+      - key: APP_LOCALE
+        scope: RUN_AND_BUILD_TIME
+        value: en
+      - key: APP_FALLBACK_LOCALE
+        scope: RUN_AND_BUILD_TIME
+        value: en
+      - key: APP_FAKER_LOCALE
+        scope: RUN_AND_BUILD_TIME
+        value: en_US
+      - key: APP_MAINTENANCE_DRIVER
+        scope: RUN_AND_BUILD_TIME
+        value: file
+
+      # --- Laravel Logging ---
+      - key: LOG_CHANNEL
+        scope: RUN_AND_BUILD_TIME
+        value: stack
+      - key: LOG_STACK
+        scope: RUN_AND_BUILD_TIME
+        value: single
+      - key: LOG_LEVEL
+        scope: RUN_AND_BUILD_TIME
+        value: debug
+
+      # --- PHP Performance ---
+      - key: PHP_CLI_SERVER_WORKERS
+        scope: RUN_AND_BUILD_TIME
+        value: "4"
+      - key: BCRYPT_ROUNDS
+        scope: RUN_AND_BUILD_TIME
+        value: "12"
+
+      # --- Database (linked from managed DB) ---
+      - key: DB_CONNECTION
+        scope: RUN_AND_BUILD_TIME
+        value: mysql
+      - key: DB_HOST
+        scope: RUN_AND_BUILD_TIME
+        value: ${db-mysql-sgp1-75743.HOST}
+      - key: DB_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: ${db-mysql-sgp1-75743.PORT}
+      - key: DB_DATABASE
+        scope: RUN_AND_BUILD_TIME
+        value: ${db-mysql-sgp1-75743.DATABASE}
+      - key: DB_USERNAME
+        scope: RUN_AND_BUILD_TIME
+        value: ${db-mysql-sgp1-75743.USERNAME}
+      - key: DB_PASSWORD
+        scope: RUN_AND_BUILD_TIME
+        value: ${db-mysql-sgp1-75743.PASSWORD}
+
+      # --- Queue / Cache / Session ---
+      - key: QUEUE_CONNECTION
+        scope: RUN_AND_BUILD_TIME
+        value: database
+      - key: CACHE_STORE
+        scope: RUN_AND_BUILD_TIME
+        value: database
+      - key: SESSION_DRIVER
+        scope: RUN_AND_BUILD_TIME
+        value: database
+      - key: SESSION_LIFETIME
+        scope: RUN_AND_BUILD_TIME
+        value: "120"
+      - key: SESSION_ENCRYPT
+        scope: RUN_AND_BUILD_TIME
+        value: "false"
+      - key: SESSION_PATH
+        scope: RUN_AND_BUILD_TIME
+        value: /
+      - key: SESSION_DOMAIN
+        scope: RUN_AND_BUILD_TIME
+        value: "null"
+
+      # --- Redis (optional) ---
+      - key: REDIS_CLIENT
+        scope: RUN_AND_BUILD_TIME
+        value: phpredis
+      - key: REDIS_HOST
+        scope: RUN_AND_BUILD_TIME
+        value: 127.0.0.1
+      - key: REDIS_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: "6379"
+      - key: REDIS_PASSWORD
+        scope: RUN_AND_BUILD_TIME
+        value: "null"
+
+      # --- Mail (example using log driver) ---
+      - key: MAIL_MAILER
+        scope: RUN_AND_BUILD_TIME
+        value: log
+      - key: MAIL_HOST
+        scope: RUN_AND_BUILD_TIME
+        value: 127.0.0.1
+      - key: MAIL_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: "2525"
+      - key: MAIL_USERNAME
+        scope: RUN_AND_BUILD_TIME
+        value: "null"
+      - key: MAIL_PASSWORD
+        scope: RUN_AND_BUILD_TIME
+        value: "null"
+      - key: MAIL_FROM_ADDRESS
+        scope: RUN_AND_BUILD_TIME
+        value: hello@example.com
+      - key: MAIL_FROM_NAME
+        scope: RUN_AND_BUILD_TIME
+        value: ${APP_NAME}
+
+      # --- Vite Frontend ---
+      - key: VITE_APP_NAME
+        scope: RUN_AND_BUILD_TIME
+        value: ${APP_NAME}
+run_command: |
+  php artisan migrate --force && heroku-php-apache2 public/
