@@ -102,19 +102,19 @@ services:
         value: mysql
       - key: DB_HOST
         scope: RUN_AND_BUILD_TIME
-        value: ${db-mysql-sgp1-75743.HOST}
+        value: ${{ secrets.DO_DB_HOST }}
       - key: DB_PORT
         scope: RUN_AND_BUILD_TIME
-        value: ${db-mysql-sgp1-75743.PORT}
+        value: ${{ secrets.DO_DB_PORT }}
       - key: DB_DATABASE
         scope: RUN_AND_BUILD_TIME
-        value: ${db-mysql-sgp1-75743.DATABASE}
+        value: ${{ secrets.DO_DB_DATABASE }}
       - key: DB_USERNAME
         scope: RUN_AND_BUILD_TIME
-        value: ${db-mysql-sgp1-75743.USERNAME}
+        value: ${{ secrets.DO_DB_USERNAME }}
       - key: DB_PASSWORD
         scope: RUN_AND_BUILD_TIME
-        value: ${db-mysql-sgp1-75743.PASSWORD}
+        value: ${{ secrets.DO_DB_PASSWORD }}
 
       # --- Queue / Cache / Session ---
       - key: QUEUE_CONNECTION
