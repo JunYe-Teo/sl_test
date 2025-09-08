@@ -1,0 +1,22 @@
+name: Deploy app
+
+on:
+  workflow_run:
+    workflows:  [Laravel]
+    types: [completed]
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-app:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy the app
+        uses: digitalocean/app_action/deploy@v2
+        with:
+          token: ${{ secrets.DO_TOKEN }}
