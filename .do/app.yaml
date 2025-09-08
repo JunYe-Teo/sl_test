@@ -1,4 +1,4 @@
-name: sl-test-app
+name: jellyfish-app
 region: sgp  # Change to your preferred region (e.g. nyc, ams)
 
 alerts:
@@ -41,7 +41,7 @@ services:
     http_port: 8080
     github:
       repo: JunYe-Teo/sl_test  # Change to your GitHub repo
-      branch: main
+      branch: master
       deploy_on_push: true
     envs:
       # --- Laravel Basic Config ---
