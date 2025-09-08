@@ -1,4 +1,4 @@
-name: test-sl-app
+name: sl-test-app
 region: sgp  # Change to your preferred region (e.g. nyc, ams)
 
 alerts:
@@ -24,14 +24,14 @@ features:
 ingress:
   rules:
     - component:
-        name: test-sl
+        name: sl-test
       match:
         authority: {}
         path:
           prefix: /
 
 services:
-  - name: test-sl
+  - name: sl-test
     environment_slug: php
     instance_count: 1
     instance_size_slug: apps-s-1vcpu-0.5gb
