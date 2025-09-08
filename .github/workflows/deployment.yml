@@ -18,5 +18,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Deploy the app
         uses: digitalocean/app_action/deploy@v2
+        env:
+          DO_DB_HOST: ${{ secrets.DO_DB_HOST }}
+          DO_DB_PORT: ${{ secrets.DO_DB_PORT }}
+          DO_DB_DATABASE: ${{ secrets.DO_DB_DATABASE }}
+          DO_DB_USERNAME: ${{ secrets.DO_DB_USERNAME }}
+          DO_DB_PASSWORD: ${{ secrets.DO_DB_PASSWORD }}
         with:
           token: ${{ secrets.DO_TOKEN }}

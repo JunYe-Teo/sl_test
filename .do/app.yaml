@@ -102,19 +102,24 @@ services:
         value: mysql
       - key: DB_HOST
         scope: RUN_AND_BUILD_TIME
-        value: ${secrets.DO_DB_HOST}
+        value: ${DO_DB_HOST}
+        type: SECRET
       - key: DB_PORT
         scope: RUN_AND_BUILD_TIME
-        value: ${secrets.DO_DB_PORT}
+        value: ${DO_DB_PORT}
+        type: SECRET
       - key: DB_DATABASE
         scope: RUN_AND_BUILD_TIME
-        value: ${secrets.DO_DB_DATABASE}
+        value: ${DO_DB_DATABASE}
+        type: SECRET
       - key: DB_USERNAME
         scope: RUN_AND_BUILD_TIME
-        value: ${secrets.DO_DB_USERNAME}
+        value: ${DO_DB_USERNAME}
+        type: SECRET
       - key: DB_PASSWORD
         scope: RUN_AND_BUILD_TIME
-        value: ${secrets.DO_DB_PASSWORD}
+        value: ${DO_DB_PASSWORD}
+        type: SECRET
 
       # --- Queue / Cache / Session ---
       - key: QUEUE_CONNECTION
