@@ -19,6 +19,5 @@ class Log extends Model
 
     protected $casts = [
         'value' => 'array',
-        'created_at' => 'integer',
     ];
 }

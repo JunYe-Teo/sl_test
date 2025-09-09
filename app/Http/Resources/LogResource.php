@@ -14,6 +14,11 @@ class LogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return json_decode(data_get($this,'value'), true);
+        return [
+            'key' => $this->key,
+            'value' => json_decode($this->value,true),
+            'created_at' => $this->created_at->timestamp,
+        ];
+        return array_merge(json_decode(data_get($this,'value'), true), ['created_at' => $this->created_at]);
     }
 }
