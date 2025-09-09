@@ -29,7 +29,7 @@ test('accept key and return corresponding latest value', function () {
     $response = $this->get('/api/logs/'.$firstLog->key);
     $response->assertStatus(200);
     $responseData = json_decode($response->getContent());
-    expect(json_encode(data_get($responseData, 'data')))->toBe($firstLog->value);
+    expect(json_encode(data_get($responseData, 'data.value')))->toBe($firstLog->value);
 
     $value = json_encode(['test' => ['message' => 'create from pest', 'date' => now()->format('Y-m-d')]]);
 
@@ -46,7 +46,7 @@ test('accept key and return corresponding latest value', function () {
     $response->assertStatus(200);
     $responseData = json_decode($response->getContent());
 
-    expect(json_encode(data_get($responseData, 'data')))->toBe($value);
+    expect(json_encode(data_get($responseData, 'data.value')))->toBe($value);
 });
 
 test('can return exact log by key and timestamp', function () {
@@ -58,16 +58,16 @@ test('can return exact log by key and timestamp', function () {
     Log::insert([
                     'key' => $firstLog->key,
                     'value' => json_encode($value),
-                    'created_at' => now()->addSecond()->timestamp,
-                    'updated_at' => now()->addSecond()->timestamp,
+                    'created_at' => now()->addSeconds(5)->timestamp,
+                    'updated_at' => now()->addSeconds(5)->timestamp,
                 ]);
 
-    $timestamp = $firstLog->created_at;
+    $timestamp = $firstLog->created_at->timestamp;
     $response = $this->get('/api/logs/'.$firstLog->key.'?timestamp='.$timestamp);
     $response->assertStatus(200);
     $responseData = json_decode($response->getContent());
 
-    expect(json_encode(data_get($responseData, 'data')))->toBe($firstLog->value);
+    expect(json_encode(data_get($responseData, 'data.value')))->toBe($firstLog->value);
 });
 
 test('can return all values stored in database', function () {
