@@ -19,6 +19,5 @@ class LogResource extends JsonResource
             'value' => json_decode($this->value,true),
             'created_at' => $this->created_at->timestamp,
         ];
-        return array_merge(json_decode(data_get($this,'value'), true), ['created_at' => $this->created_at]);
     }
 }
